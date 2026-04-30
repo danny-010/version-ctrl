@@ -51,29 +51,3 @@ kubectl exec -n <namespace> <prometheus-pod-name> -- kill -HUP 1
 这将向 Prometheus 进程发送信号，触发它重新加载配置。
 
 也可以通过 Prometheus 的 HTTP 接口手动触发重新加载：
-
-bash
-Copy code
-curl -X POST http://<prometheus-server-ip>:9090/-/reload
-3. 在 Prometheus UI 中验证配置
-   重新加载配置后，可以通过 Prometheus UI 查看外部节点是否已成功被监控：
-
-访问 Prometheus 的 Web 界面，URL 一般为 http://<prometheus-server-ip>:9090。
-在 “Targets” 页面 (在导航栏选择 “Status” > “Targets”)，你应该可以看到名为 external-node-exporters 的新 job，以及对应的外部节点 node_exporter 目标。
-如果所有节点的状态是 UP，说明 Prometheus 已经成功开始抓取这些节点的数据。
-4. 配置 Grafana 监控外部节点
-   如果你使用 Grafana 作为监控前端，可以通过在 Grafana 的仪表板上配置 node_exporter 数据来源来监控这些外部节点。
-
-打开 Grafana，进入你的 Node Exporter 仪表板。
-在仪表板的查询中，增加一个 Prometheus 查询，将新添加的外部节点包含进来。例如，使用 Prometheus 查询语句：
-promql
-Copy code
-node_cpu_seconds_total{instance=~"external-node-ip-.*"}
-这将显示所有 node_exporter 数据中来自外部节点的监控信息。
-
-总结
-部署 node_exporter 到外部节点，并确保 9100 端口对 Prometheus 可访问。
-修改 Prometheus 的 prometheus.yml 配置文件，添加外部节点为静态目标。
-重新加载 Prometheus 配置，并验证配置是否成功。
-可在 Grafana 或 Prometheus UI 中查看和监控这些外部节点的指标。
-通过这种方式，你可以轻松监控 Kubernetes 集群之外的节点的状态。
