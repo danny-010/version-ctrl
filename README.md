@@ -45,9 +45,15 @@ scrape_configs:
 
 如果 Prometheus 是通过 Kubernetes 部署的，可以使用 kubectl 命令：
 
+
 bash
 Copy code
 kubectl exec -n <namespace> <prometheus-pod-name> -- kill -HUP 1
 这将向 Prometheus 进程发送信号，触发它重新加载配置。
+123445
+
+
+
+
 
 也可以通过 Prometheus 的 HTTP 接口手动触发重新加载：
